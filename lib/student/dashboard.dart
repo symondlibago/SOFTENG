@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:first_project/main.dart';
+import 'main.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class DashboardScreen extends StatefulWidget {
