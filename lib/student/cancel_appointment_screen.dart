@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
+import 'drawer.dart';
 import 'cancel_appointment.dart';
 
 class CancelingAppointment extends StatelessWidget {

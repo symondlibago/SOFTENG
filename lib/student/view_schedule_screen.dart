@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
+import 'drawer.dart';
 import 'book_appointment.dart';
 
 class ViewScheduleScreen extends StatelessWidget {

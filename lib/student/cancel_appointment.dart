@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'main.dart';
+import 'drawer.dart';
 
 class CancelAppointment extends StatelessWidget {
   final String avatarText;

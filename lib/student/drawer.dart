@@ -5,24 +5,6 @@ import 'my_schedule_screen.dart';
 import 'view_schedule_screen.dart';
 import 'cancel_appointment_screen.dart';
 
-void main() {
-  runApp(MyApp());
-}
-
-class MyApp extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return MaterialApp(
-      debugShowCheckedModeBanner: false,
-      title: 'ZestCons',
-      theme: ThemeData(
-        primarySwatch: Colors.blue,
-      ),
-      home: DashboardScreen(),
-    );
-  }
-}
-
 class SidebarDrawer extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Drawer(
@@ -61,35 +43,35 @@ class SidebarDrawer extends StatelessWidget {
                         MaterialPageRoute(
                             builder: (context) => DashboardScreen()),
                       );
-                    }),
+                    }, context),
                     buildDrawerItem('Edit Profile', Icons.person, () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => EditProfileScreen()),
                       );
-                    }),
+                    }, context),
                     buildDrawerItem('My Schedule', Icons.schedule, () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => MyScheduleScreen()),
                       );
-                    }),
+                    }, context),
                     buildDrawerItem('View Schedule', Icons.calendar_today, () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => ViewScheduleScreen()),
                       );
-                    }),
+                    }, context),
                     buildDrawerItem('Cancel Appointment', Icons.cancel, () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
                             builder: (context) => CancelingAppointment()),
                       );
-                    }),
+                    }, context),
                   ],
                 ),
               ),
@@ -115,8 +97,7 @@ class SidebarDrawer extends StatelessWidget {
                   ],
                 ),
                 onTap: () {
-                  // logout action
-                  Navigator.pop(context); // para close sa drawer
+                  Navigator.pop(context); // Close the drawer
                 },
               ),
             ],
@@ -124,7 +105,8 @@ class SidebarDrawer extends StatelessWidget {
         ),
       );
 
-  ListTile buildDrawerItem(String title, IconData icon, void Function() onTap) {
+  ListTile buildDrawerItem(String title, IconData icon, void Function() onTap,
+      BuildContext context) {
     return ListTile(
       title: Row(
         children: [
@@ -143,7 +125,10 @@ class SidebarDrawer extends StatelessWidget {
           ),
         ],
       ),
-      onTap: onTap,
+      onTap: () {
+        Navigator.pop(context); // Close the drawer
+        onTap(); // Execute the provided onTap function
+      },
     );
   }
 }
