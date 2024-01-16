@@ -9,7 +9,7 @@ class ViewScheduleScreen extends StatelessWidget {
       appBar: AppBar(
         title: Center(
           child: Text(
-            'View Available Schedule',
+            'View Appointment Schedule',
             style: TextStyle(
               color: Color(0xFF1f1b4f),
               fontWeight: FontWeight.bold,

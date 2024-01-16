@@ -20,7 +20,7 @@ class BookAppointment extends StatelessWidget {
       appBar: AppBar(
         title: Center(
           child: Text(
-            'Book Appointment',
+            'Appointment',
             style: TextStyle(
               color: Color(0xFF1f1b4f),
               fontWeight: FontWeight.bold,
@@ -46,7 +46,6 @@ class BookAppointment extends StatelessWidget {
             SizedBox(height: 20),
             ReasonForAppointmentInput(),
             SizedBox(height: 20),
-            BookButton(),
           ],
         ),
       ),
@@ -200,26 +199,6 @@ class ReasonForAppointmentInput extends StatelessWidget {
           ),
         ),
       ],
-    );
-  }
-}
-
-class BookButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: ElevatedButton(
-        onPressed: () {},
-        style: ElevatedButton.styleFrom(
-          primary: Color(0xFF1f1b4f),
-        ),
-        child: Text(
-          'Book',
-          style: TextStyle(
-            color: Color.fromRGBO(250, 180, 23, 1),
-          ),
-        ),
-      ),
     );
   }
 }

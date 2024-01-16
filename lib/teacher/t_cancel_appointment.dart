@@ -207,19 +207,39 @@ class ReasonForAppointmentInput extends StatelessWidget {
 class BookButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ElevatedButton(
-        onPressed: () {},
-        style: ElevatedButton.styleFrom(
-          primary: Color(0xFF1f1b4f),
-        ),
-        child: Text(
-          'Submit',
-          style: TextStyle(
-            color: Color.fromRGBO(250, 180, 23, 1),
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ElevatedButton(
+          onPressed: () {
+            // Add functionality for the "Accept" button
+          },
+          style: ElevatedButton.styleFrom(
+            primary: Color(0xFF1f1b4f),
+          ),
+          child: Text(
+            'Accept',
+            style: TextStyle(
+              color: Color.fromRGBO(250, 180, 23, 1),
+            ),
           ),
         ),
-      ),
+        SizedBox(width: 16), // Add some space between the buttons
+        ElevatedButton(
+          onPressed: () {
+            // Add functionality for the "Reject" button
+          },
+          style: ElevatedButton.styleFrom(
+            primary: Color(0xFF1f1b4f), // Background color for Reject button
+          ),
+          child: Text(
+            'Reject',
+            style: TextStyle(
+              color: Color.fromRGBO(250, 180, 23, 1),
+            ),
+          ),
+        ),
+      ],
     );
   }
 }

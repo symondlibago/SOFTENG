@@ -51,7 +51,7 @@ class SidebarDrawer extends StatelessWidget {
                             builder: (context) => EditProfileScreen()),
                       );
                     }, context),
-                    buildDrawerItem('My Schedule', Icons.calendar_today, () {
+                    buildDrawerItem('My Appointment', Icons.calendar_today, () {
                       Navigator.push(
                         context,
                         MaterialPageRoute(
