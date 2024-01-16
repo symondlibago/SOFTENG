@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'student/drawer.dart';
 import 'student/dashboard.dart';
+import 'teacher/t_dashboard.dart';
 
 void main() {
   runApp(MyApp());
@@ -39,12 +40,16 @@ class MyHomePage extends StatelessWidget {
                   MaterialPageRoute(builder: (context) => DashboardScreen()),
                 );
               },
-              child: Text('Studeeeent'),
+              child: Text('Student'),
             ),
             SizedBox(height: 20),
             ElevatedButton(
               onPressed: () {
-                print('Teacher button pressed');
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                      builder: (context) => TeachersDashboardScreen()),
+                );
               },
               child: Text('Teacher'),
             ),
