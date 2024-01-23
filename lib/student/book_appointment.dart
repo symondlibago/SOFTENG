@@ -1,18 +1,34 @@
+import 'package:first_project/student/my_schedule_screen.dart';
 import 'package:flutter/material.dart';
+import '../backend.dart';
 import 'drawer.dart';
 
-class BookAppointment extends StatelessWidget {
+class BookAppointment extends StatefulWidget {
+
+  final String studID;
+  final String availID;
   final String avatarText;
   final String name;
   final String availableDate;
   final String time;
 
-  BookAppointment({
-    required this.avatarText,
-    required this.name,
-    required this.availableDate,
-    required this.time,
-  });
+  BookAppointment(
+      this.studID,
+      this.availID,
+      this.avatarText,
+      this.name,
+      this.availableDate,
+      this.time,
+      {super.key}
+      );
+
+  @override
+  State<BookAppointment> createState() => _BookAppointmentState();
+}
+
+class _BookAppointmentState extends State<BookAppointment> {
+
+  final reasonController = TextEditingController();
 
   @override
   Widget build(BuildContext context) {
@@ -36,17 +52,72 @@ class BookAppointment extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             UserProfileInfo(
-              avatarText: avatarText,
-              name: name,
-              availableDate: availableDate,
-              time: time,
+              avatarText: widget.avatarText,
+              name: widget.name,
+              availableDate: widget.availableDate,
+              time: widget.time,
             ),
             SizedBox(height: 20),
-            DateAndTimeInput(),
+            DateAndTimeInput(widget.availableDate, widget.time),
             SizedBox(height: 20),
-            ReasonForAppointmentInput(),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                const Text(
+                  'Reason for Appointment',
+                  style: TextStyle(
+                    fontSize: 16,
+                    color: Color(0xFF1f1b4f),
+                  ),
+                ),
+                Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: Color(0xFF1f1b4f),
+                      width: 2.0,
+                    ),
+                    borderRadius: BorderRadius.circular(8.0),
+                  ),
+                  child: TextField(
+                    controller: reasonController,
+                    maxLines: 3,
+                    decoration: InputDecoration(
+                      border: InputBorder.none,
+                      contentPadding: EdgeInsets.all(8.0),
+                    ),
+                  ),
+                ),
+              ],
+            ),
             SizedBox(height: 20),
-            BookButton(),
+
+            Center(
+              child: ElevatedButton(
+                onPressed: () async {
+                  String reason = reasonController.text;
+                  print(widget.studID);
+                  print(widget.availID);
+                  print(reason);
+
+                  await BaseClient().insertAppoint('/insertAppointment.php', widget.studID, widget.availID, reason);
+                  
+                  Navigator.push(
+                    context,
+                    MaterialPageRoute(builder: (context) => MyScheduleScreen())
+                  );
+                  
+                },
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Color(0xFF1f1b4f),
+                ),
+                child: Text(
+                  'Book',
+                  style: TextStyle(
+                    color: Color.fromRGBO(250, 180, 23, 1),
+                  ),
+                ),
+              ),
+            ),
           ],
         ),
       ),
@@ -100,7 +171,7 @@ class UserProfileInfo extends StatelessWidget {
               ),
               SizedBox(height: 8),
               Text(
-                'Available on $availableDate at $time',
+                'Available on $availableDate\nat $time',
                 style: TextStyle(
                   fontSize: 16,
                   color: Color(0xFF1f1b4f),
@@ -115,6 +186,14 @@ class UserProfileInfo extends StatelessWidget {
 }
 
 class DateAndTimeInput extends StatelessWidget {
+
+  final String date;
+  final String time;
+
+  const DateAndTimeInput(this.date, this.time, {super.key});
+
+
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -137,6 +216,7 @@ class DateAndTimeInput extends StatelessWidget {
           ),
           child: TextField(
             decoration: InputDecoration(
+              hintText: date,
               border: InputBorder.none,
               contentPadding: EdgeInsets.all(8.0),
             ),
@@ -159,7 +239,9 @@ class DateAndTimeInput extends StatelessWidget {
             borderRadius: BorderRadius.circular(8.0),
           ),
           child: TextField(
+
             decoration: InputDecoration(
+              hintText: time,
               border: InputBorder.none,
               contentPadding: EdgeInsets.all(8.0),
             ),
@@ -170,56 +252,6 @@ class DateAndTimeInput extends StatelessWidget {
   }
 }
 
-class ReasonForAppointmentInput extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        Text(
-          'Reason for Appointment',
-          style: TextStyle(
-            fontSize: 16,
-            color: Color(0xFF1f1b4f),
-          ),
-        ),
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Color(0xFF1f1b4f),
-              width: 2.0,
-            ),
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          child: TextField(
-            maxLines: 3,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.all(8.0),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
 
-class BookButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Center(
-      child: ElevatedButton(
-        onPressed: () {},
-        style: ElevatedButton.styleFrom(
-          primary: Color(0xFF1f1b4f),
-        ),
-        child: Text(
-          'Book',
-          style: TextStyle(
-            color: Color.fromRGBO(250, 180, 23, 1),
-          ),
-        ),
-      ),
-    );
-  }
-}
+
+

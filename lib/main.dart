@@ -1,3 +1,4 @@
+import 'package:first_project/Welcome.dart';
 import 'package:flutter/material.dart';
 import 'student/drawer.dart';
 import 'student/dashboard.dart';
@@ -16,7 +17,7 @@ class MyApp extends StatelessWidget {
       theme: ThemeData(
         primarySwatch: Colors.blue,
       ),
-      home: MyHomePage(),
+      home: SplashPage(),
     );
   }
 }
@@ -28,7 +29,7 @@ class MyHomePage extends StatelessWidget {
       appBar: AppBar(
         title: Text('User Type'),
       ),
-      drawer: SidebarDrawer(), // Include the drawer here
+       // Include the drawer here
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,

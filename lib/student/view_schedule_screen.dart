@@ -1,13 +1,43 @@
+import 'package:first_project/backend.dart';
 import 'package:flutter/material.dart';
 import 'drawer.dart';
 import 'book_appointment.dart';
 
-class ViewScheduleScreen extends StatelessWidget {
+class ViewScheduleScreen extends StatefulWidget {
+
+  final String studID;
+  
+
+  const ViewScheduleScreen(this.studID, {super.key});
+
+  @override
+  State<ViewScheduleScreen> createState() => _ViewScheduleScreenState();
+}
+
+class _ViewScheduleScreenState extends State<ViewScheduleScreen> {
+  
+  List<dynamic> dataList = [];
+  
+  @override
+  void initState(){
+    getSchedData();
+    super.initState();
+  }
+  
+  getSchedData() async {
+    var dataGet = await BaseClient().getData('/getSchedule.php');
+
+    setState(() {
+      dataList = dataGet;
+    });
+  }
+  
+  
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Center(
+        title: const Center(
           child: Text(
             'View Available Schedule',
             style: TextStyle(
@@ -17,60 +47,47 @@ class ViewScheduleScreen extends StatelessWidget {
           ),
         ),
       ),
-      drawer: SidebarDrawer(),
+      drawer: const SidebarDrawer(),
       body: Padding(
-        padding: const EdgeInsets.all(16.0),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            InkWell(
-              onTap: () {
-                // Navigate to the BookAppointment page
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BookAppointment(
-                      avatarText: 'J',
-                      name: 'John Doe',
-                      availableDate: 'January 13, 2024',
-                      time: '2:00 PM',
-                    ),
+          padding: const EdgeInsets.all(16.0),
+          child:
+          ListView.builder(
+              itemCount: dataList.length,
+              itemBuilder: (context, index){
+                return InkWell(
+                  onTap: () {
+                    print(widget.studID);
+                    print(dataList[index]["avail_id"]);
+                    String firstLetter = dataList[index]["name"];
+
+                    // Navigate to the BookAppointment page
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => BookAppointment(
+                          widget.studID,
+                          dataList[index]["avail_id"],
+                          firstLetter.substring(0, 1).toUpperCase(),
+                          dataList[index]["name"],
+                          dataList[index]["date"],
+                          dataList[index]["time"]
+                        ),
+                      ),
+                    );
+                  },
+                  child: ScheduleDetails(
+                    name: '${dataList[index]["name"]} ${dataList[index]["last_name"]}',
+                    availableDate: '${dataList[index]["date"]}',
+                    time: '${dataList[index]["time"]}',
                   ),
                 );
-              },
-              child: ScheduleDetails(
-                name: 'John Doe',
-                availableDate: 'January 13, 2024',
-                time: '2:00 PM',
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                // Navigate to the BookAppointment page for Jane Smith
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => BookAppointment(
-                      avatarText: 'J',
-                      name: 'Jane Smith',
-                      availableDate: 'February 20, 2024',
-                      time: '3:30 PM',
-                    ),
-                  ),
-                );
-              },
-              child: ScheduleDetails(
-                name: 'Jane Smith',
-                availableDate: 'February 20, 2024',
-                time: '3:30 PM',
-              ),
-            ),
-          ],
-        ),
+              }
+          )
       ),
     );
   }
 }
+
 
 class ScheduleDetails extends StatelessWidget {
   final String name;
