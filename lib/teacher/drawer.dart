@@ -1,11 +1,12 @@
 import 'package:first_project/main.dart';
 import 'package:flutter/material.dart';
 import '../backend.dart';
-import 'dashboard.dart';
-import 'edit_profile_screen.dart';
-import 'my_schedule_screen.dart';
-import 'view_schedule_screen.dart';
-import 'cancel_appointment_screen.dart';
+import 't_dashboard.dart';
+import 't_edit_profile_screen.dart';
+import 't_active_appointments.dart';
+import 't_available_sched.dart';
+import 't_cancel_appointment.dart';
+import 't_pending.dart';
 
 class SidebarDrawer extends StatefulWidget {
 
@@ -18,11 +19,11 @@ class SidebarDrawer extends StatefulWidget {
 
 class _SidebarDrawerState extends State<SidebarDrawer> {
 
-  String studID = "";
+  String teachID = "";
   String name = "";
   String email = "";
-  String yearLevel = "";
-  String program = "";
+  String background = "";
+
 
 
   @override
@@ -34,17 +35,15 @@ class _SidebarDrawerState extends State<SidebarDrawer> {
 
 
   getUserData() async {
-    var getUser = await BaseClient().getData("/tempLogin.php");
+    var getUser = await BaseClient().getData("/tempLoginTeacher.php");
 
     setState(() {
-     studID = getUser["studID"];
-     name = getUser["name"];
-     email = getUser["email"];
-     yearLevel = getUser["year_lvl"];
-     program = getUser["program"];
+      teachID = getUser["tID"];
+      name = getUser["name"];
+      email = getUser["email"];
+      background = getUser["background"];
     });
   }
-
 
 
 
@@ -83,35 +82,35 @@ class _SidebarDrawerState extends State<SidebarDrawer> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => DashboardScreen()),
+                        builder: (context) => TeachersDashboardScreen()),
                   );
                 }, context),
                 buildDrawerItem('Edit Profile', Icons.person, () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => EditProfile(studID)),
+                        builder: (context) => EditProfileScreen()),
                   );
                 }, context),
-                buildDrawerItem('My Appointments', Icons.schedule, () {
+                buildDrawerItem('My Appointment', Icons.schedule, () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => MyScheduleScreen(studID)),
+                        builder: (context) => MyAppointments(teachID,)),
                   );
                 }, context),
-                buildDrawerItem('View Schedule', Icons.calendar_today, () {
+                buildDrawerItem('My Schedule', Icons.calendar_today, () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => ViewScheduleScreen(studID)),
+                        builder: (context) => TeacherSchedule(teachID, name)),
                   );
                 }, context),
-                buildDrawerItem('Cancel Appointment', Icons.cancel, () {
+                buildDrawerItem('Appointment Request', Icons.check, () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => CancelingAppointment()),
+                        builder: (context) => PendingAppointments(teachID)),
                   );
                 }, context),
               ],
@@ -170,7 +169,8 @@ class _SidebarDrawerState extends State<SidebarDrawer> {
         ],
       ),
       onTap: () {
-        Navigator.pop(context); // Close the drawer
+        Navigator.push(context,
+        MaterialPageRoute(builder: (context) => MyHomePage())); // Close the drawer
         onTap(); // Execute the provided onTap function
       },
     );

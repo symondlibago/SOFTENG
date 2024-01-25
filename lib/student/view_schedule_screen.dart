@@ -35,6 +35,7 @@ class _ViewScheduleScreenState extends State<ViewScheduleScreen> {
   
   @override
   Widget build(BuildContext context) {
+
     return Scaffold(
       appBar: AppBar(
         title: const Center(
@@ -54,34 +55,39 @@ class _ViewScheduleScreenState extends State<ViewScheduleScreen> {
           ListView.builder(
               itemCount: dataList.length,
               itemBuilder: (context, index){
-                return InkWell(
-                  onTap: () {
-                    print(widget.studID);
-                    print(dataList[index]["avail_id"]);
-                    String firstLetter = dataList[index]["name"];
+                  return InkWell(
+                    onTap: () {
+                      String fullname = '${dataList[index]["name"]} ${dataList[index]["last_name"]}';
+                      print(fullname);
+                      print(widget.studID);
+                      print(dataList[index]["avail_id"]);
+                      String firstLetter = dataList[index]["name"];
 
-                    // Navigate to the BookAppointment page
-                    Navigator.push(
-                      context,
-                      MaterialPageRoute(
-                        builder: (context) => BookAppointment(
-                          widget.studID,
-                          dataList[index]["avail_id"],
-                          firstLetter.substring(0, 1).toUpperCase(),
-                          dataList[index]["name"],
-                          dataList[index]["date"],
-                          dataList[index]["time"]
+                      // Navigate to the BookAppointment page
+                      Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => BookAppointment(
+                            widget.studID,
+                            dataList[index]["avail_id"],
+                            firstLetter.substring(0, 1).toUpperCase(),
+                            fullname,
+                            dataList[index]["date"],
+                            dataList[index]["time"]
+                          ),
                         ),
-                      ),
-                    );
-                  },
-                  child: ScheduleDetails(
-                    name: '${dataList[index]["name"]} ${dataList[index]["last_name"]}',
-                    availableDate: '${dataList[index]["date"]}',
-                    time: '${dataList[index]["time"]}',
-                  ),
-                );
+                      );
+                    },
+                    child: ScheduleDetails(
+                      name: '${dataList[index]["name"]} ${dataList[index]["last_name"]}',
+                      availableDate: '${dataList[index]["date"]}',
+                      time: '${dataList[index]["time"]}',
+                    ),
+                  );
+
+
               }
+
           )
       ),
     );

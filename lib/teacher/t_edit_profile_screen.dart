@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 't_drawer.dart';
+import 'drawer.dart';
 
 class EditProfileScreen extends StatelessWidget {
   @override

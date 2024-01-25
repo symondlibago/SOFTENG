@@ -1,18 +1,104 @@
+import 'package:first_project/backend.dart';
+import 'package:first_project/teacher/t_pending.dart';
+import 'package:first_project/teacher/t_active_appointments.dart';
 import 'package:flutter/material.dart';
-import 't_drawer.dart';
+import 'drawer.dart';
 
 class CancelAppointment extends StatelessWidget {
+  final String teachID;
+  final String pendingID;
   final String avatarText;
   final String name;
   final String availableDate;
   final String time;
+  final String reason;
 
-  CancelAppointment({
+  CancelAppointment({super.key,
+    required this.teachID,
+    required this.pendingID,
     required this.avatarText,
     required this.name,
     required this.availableDate,
     required this.time,
+    required this.reason,
   });
+
+  final TextEditingController acceptCommentController = TextEditingController();
+  final TextEditingController rejectCommentController = TextEditingController();
+
+
+
+
+
+    void showCommentDialog(BuildContext context, String title, TextEditingController commentController, bool accept) {
+      showDialog(
+        context: context,
+        builder: (BuildContext context) {
+          return AlertDialog(
+            title: Text(title),
+            content: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                accept 
+                    ? Text('Details for Meetup')
+                    : Text('Reason for Rejection')
+                ,
+                TextField(
+                  controller: commentController,
+                  maxLines: 3, 
+                  decoration: InputDecoration(
+                    hintText: 'Enter your comment here...',
+                    border: OutlineInputBorder(),
+                  ),
+                ),
+                SizedBox(height: 10),
+                Column(
+                  children:[ ElevatedButton(
+                    onPressed: () async {
+
+                      String comment = commentController.text;
+
+                      accept
+                        ? await BaseClient().acceptAppointment('/acceptAppointment.php', pendingID, comment)
+                        : await BaseClient().acceptAppointment('/rejectAppointment.php', pendingID, comment);
+
+                      print("Comment submitted: $comment");
+                      Navigator.push(context, MaterialPageRoute(builder: (context)=> PendingAppointments(teachID))); // Close the dialog
+                    },
+                    style: ElevatedButton.styleFrom(
+                      primary: Color(0xFF1f1b4f),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(20.0),
+                      ),
+                    ),
+                    child: const Text("Submit",
+                      style: TextStyle(
+                        color: Color.fromRGBO(250, 180, 23, 1),
+                    ),
+                  ),
+                ),
+                  ]
+                )
+              ],
+            ),
+          );
+        },
+      );
+
+
+
+
+
+  }
+
+  void showAcceptDialog(BuildContext context) {
+    showCommentDialog(context, "Accepted", acceptCommentController, true);
+  }
+
+  void showRejectDialog(BuildContext context) {
+    showCommentDialog(context, "Rejected", rejectCommentController, false);
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -42,16 +128,54 @@ class CancelAppointment extends StatelessWidget {
               time: time,
             ),
             SizedBox(height: 20),
-            DateAndTimeInput(),
+            DateAndTimeInput(
+              date: availableDate,
+              time: time
+            ),
             SizedBox(height: 20),
-            ReasonForAppointmentInput(),
+            ReasonForAppointmentInput(reason: reason,),
             SizedBox(height: 20),
-            BookButton(),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: () {
+                    showAcceptDialog(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Color(0xFF1f1b4f),
+                  ),
+                  child: const Text(
+                    'Accept',
+                    style: TextStyle(
+                      color: Color.fromRGBO(250, 180, 23, 1),
+                    ),
+                  ),
+                ),
+                SizedBox(width: 16), // Add some space between the buttons
+                ElevatedButton(
+                  onPressed: () {
+                    showRejectDialog(context);
+                  },
+                  style: ElevatedButton.styleFrom(
+                    primary: Color(0xFF1f1b4f), // Background color for Reject button
+                  ),
+                  child: const Text(
+                    'Reject',
+                    style: TextStyle(
+                      color: Color.fromRGBO(250, 180, 23, 1),
+                    ),
+                  ),
+                ),
+              ],
+            ),
           ],
         ),
       ),
     );
   }
+
+
 }
 
 class UserProfileInfo extends StatelessWidget {
@@ -100,7 +224,7 @@ class UserProfileInfo extends StatelessWidget {
               ),
               SizedBox(height: 8),
               Text(
-                'Available on $availableDate at $time',
+                'Available on $availableDate\nat $time',
                 style: TextStyle(
                   fontSize: 16,
                   color: Color(0xFF1f1b4f),
@@ -115,62 +239,54 @@ class UserProfileInfo extends StatelessWidget {
 }
 
 class DateAndTimeInput extends StatelessWidget {
+
+  final String date;
+  final String time;
+
+  const DateAndTimeInput({
+    required this.date,
+    required this.time,
+
+    super.key});
+
+
+
   @override
   Widget build(BuildContext context) {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
-          'MM/DD/YY',
+          'Date: $date',
           style: TextStyle(
             fontSize: 16,
             color: Color(0xFF1f1b4f),
-          ),
-        ),
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Color(0xFF1f1b4f),
-              width: 2.0,
-            ),
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          child: TextField(
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.all(8.0),
-            ),
           ),
         ),
         SizedBox(height: 16),
         Text(
-          'Time',
+          'Time: $time',
           style: TextStyle(
             fontSize: 16,
             color: Color(0xFF1f1b4f),
           ),
         ),
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Color(0xFF1f1b4f),
-              width: 2.0,
-            ),
-            borderRadius: BorderRadius.circular(8.0),
-          ),
-          child: TextField(
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.all(8.0),
-            ),
-          ),
-        ),
+
       ],
     );
   }
 }
 
 class ReasonForAppointmentInput extends StatelessWidget {
+
+  final String reason;
+
+  const ReasonForAppointmentInput({super.key,
+        required this.reason
+  });
+
+
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -183,63 +299,17 @@ class ReasonForAppointmentInput extends StatelessWidget {
             color: Color(0xFF1f1b4f),
           ),
         ),
-        Container(
-          decoration: BoxDecoration(
-            border: Border.all(
-              color: Color(0xFF1f1b4f),
-              width: 2.0,
-            ),
-            borderRadius: BorderRadius.circular(8.0),
+        Text(
+          reason,
+          style: TextStyle(
+            fontSize: 12,
+            color: Color(0xFF1f1b4f),
           ),
-          child: TextField(
-            maxLines: 3,
-            decoration: InputDecoration(
-              border: InputBorder.none,
-              contentPadding: EdgeInsets.all(8.0),
-            ),
           ),
-        ),
       ],
     );
+
   }
 }
 
-class BookButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        ElevatedButton(
-          onPressed: () {
-            // Add functionality for the "Accept" button
-          },
-          style: ElevatedButton.styleFrom(
-            primary: Color(0xFF1f1b4f),
-          ),
-          child: Text(
-            'Accept',
-            style: TextStyle(
-              color: Color.fromRGBO(250, 180, 23, 1),
-            ),
-          ),
-        ),
-        SizedBox(width: 16), // Add some space between the buttons
-        ElevatedButton(
-          onPressed: () {
-            // Add functionality for the "Reject" button
-          },
-          style: ElevatedButton.styleFrom(
-            primary: Color(0xFF1f1b4f), // Background color for Reject button
-          ),
-          child: Text(
-            'Reject',
-            style: TextStyle(
-              color: Color.fromRGBO(250, 180, 23, 1),
-            ),
-          ),
-        ),
-      ],
-    );
-  }
-}
+

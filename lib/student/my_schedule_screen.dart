@@ -1,14 +1,43 @@
+import 'package:first_project/backend.dart';
 import 'package:flutter/material.dart';
 import 'drawer.dart';
 
-class MyScheduleScreen extends StatelessWidget {
+class MyScheduleScreen extends StatefulWidget {
+
+  final String studID;
+
+  const MyScheduleScreen(
+      this.studID,
+      {super.key});
+
+  @override
+  State<MyScheduleScreen> createState() => _MyScheduleScreenState();
+}
+
+class _MyScheduleScreenState extends State<MyScheduleScreen> {
+
+  List<dynamic> getData = [];
+
+  void initState(){
+    getAppoints();
+    super.initState();
+  }
+
+  getAppoints() async {
+    var dataRetrieve = await BaseClient().getWithID(widget.studID, '/getStudentAppointment.php');
+
+    setState(() {
+      getData = dataRetrieve;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Center(
           child: Text(
-            'My Schedule',
+            'My Appointments',
             style: TextStyle(
               color: Color(0xFF1f1b4f),
               fontWeight: FontWeight.bold,
@@ -19,42 +48,24 @@ class MyScheduleScreen extends StatelessWidget {
       drawer: SidebarDrawer(),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
-        child: Schedule(), // Use the Schedule widget here
+        child: Column(
+          children: [
+            Expanded(
+              child: ListView.builder(
+                  itemCount: getData.length,
+                  itemBuilder: (context, index){
+                    return ScheduleItem(
+                        title: '${getData[index]["name"]} ${getData[index]["last_name"]}',
+                        time: getData[index]["time"],
+                        date: getData[index]["date"],
+                        location: getData[index]["details"]
+                    );
+                  }
+              ),
+            ),
+          ],
+        ),
       ),
-    );
-  }
-}
-
-class Schedule extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Column(
-      children: [
-        ScheduleItem(
-          title: 'Mrs. Love Perez',
-          time: '2:00 PM',
-          date: 'November 10, 2023',
-          location: 'CITC building, 4th floor, Chairman\'s Office',
-        ),
-        ScheduleItem(
-          title: 'Ms. Nina Dobrev',
-          time: '1:00 PM',
-          date: 'November 13, 2023',
-          location: 'CITC building, 1st floor, Dean\'s Office',
-        ),
-        ScheduleItem(
-          title: 'Mr. Paul Wesly',
-          time: '3:00 PM',
-          date: 'November 13, 2023',
-          location: 'CITC building, 1st floor, Dean\'s Office',
-        ),
-        ScheduleItem(
-          title: 'Mr. Chris Wood',
-          time: '9:30 AM',
-          date: 'December 10, 2023',
-          location: 'CITC building, 4th floor, Chairman\'s Office',
-        ),
-      ],
     );
   }
 }

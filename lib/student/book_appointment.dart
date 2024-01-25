@@ -1,3 +1,4 @@
+import 'package:first_project/student/dashboard.dart';
 import 'package:first_project/student/my_schedule_screen.dart';
 import 'package:flutter/material.dart';
 import '../backend.dart';
@@ -103,7 +104,7 @@ class _BookAppointmentState extends State<BookAppointment> {
                   
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => MyScheduleScreen())
+                    MaterialPageRoute(builder: (context) => DashboardScreen())
                   );
                   
                 },
