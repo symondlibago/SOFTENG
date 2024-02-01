@@ -47,7 +47,7 @@ class _PendingAppointmentsState extends State<PendingAppointments> {
           ),
         ),
       ),
-      drawer: SidebarDrawer(),
+      drawer: SidebarDrawer(widget.teachID),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child:

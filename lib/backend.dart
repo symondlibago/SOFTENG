@@ -10,7 +10,23 @@ const String baseUrl = 'http://192.168.56.1/ZestCons';
 
 class BaseClient {
 
-  var client = http.Client();
+  Future<dynamic> login(String api, String username, String password) async {
+    var uri = Uri.parse(baseUrl + api);
+
+
+    var response = await http.post(uri, body: {
+      'username' : username,
+      'password' : password
+    });
+
+    if (response.statusCode == 200) {
+      return jsonDecode(response.body);
+    } else {
+      throw Exception('Failed to load');
+    }
+  }
+
+
 
   Future<dynamic> getData(String api) async {
     var uri = Uri.parse(baseUrl + api);
@@ -105,6 +121,22 @@ class BaseClient {
       print('Add Failed. with code: ${response.statusCode}');
     }
 
+  }
+
+  Future<dynamic> insertScheduleTeacher(String api, String date, String time, String ID) async {
+    var uri = Uri.parse(baseUrl + api);
+
+    var response = await http.post(uri, body: {
+      'date' : date,
+      'time' :time,
+      'ID' : ID
+    });
+
+    if (response.statusCode == 200){
+      print('Removed Data Successfully');
+    }else{
+      print('Add Failed. with code: ${response.statusCode}');
+    }
   }
 
 }

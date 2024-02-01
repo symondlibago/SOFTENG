@@ -4,7 +4,11 @@ import 'package:table_calendar/table_calendar.dart';
 
 class TeachersDashboardScreen extends StatefulWidget {
 
-  const TeachersDashboardScreen({super.key});
+  final String ID;
+
+  const TeachersDashboardScreen(
+      this.ID,
+      {super.key});
 
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
@@ -23,9 +27,9 @@ class _DashboardScreenState extends State<TeachersDashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Hi, Ms. Nina!'),
+        title: Text('ZestCons'),
       ),
-      drawer: SidebarDrawer(),
+      drawer: SidebarDrawer(widget.ID),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

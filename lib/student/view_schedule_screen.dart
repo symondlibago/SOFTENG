@@ -48,7 +48,7 @@ class _ViewScheduleScreenState extends State<ViewScheduleScreen> {
           ),
         ),
       ),
-      drawer: const SidebarDrawer(),
+      drawer: SidebarDrawer(widget.studID),
       body: Padding(
           padding: const EdgeInsets.all(16.0),
           child:

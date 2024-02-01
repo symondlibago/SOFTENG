@@ -1,3 +1,4 @@
+import 'package:first_project/student/cancel_appointment_screen.dart';
 import 'package:first_project/student/dashboard.dart';
 import 'package:first_project/student/my_schedule_screen.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,7 @@ class _BookAppointmentState extends State<BookAppointment> {
           ),
         ),
       ),
-      drawer: SidebarDrawer(),
+      drawer: SidebarDrawer(widget.studID),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
@@ -104,7 +105,7 @@ class _BookAppointmentState extends State<BookAppointment> {
                   
                   Navigator.push(
                     context,
-                    MaterialPageRoute(builder: (context) => DashboardScreen())
+                    MaterialPageRoute(builder: (context) => PendingAppointment(widget.studID))
                   );
                   
                 },

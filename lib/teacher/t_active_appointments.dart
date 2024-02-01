@@ -50,7 +50,7 @@ class _MyAppointmentsState extends State<MyAppointments> {
           ),
         ),
       ),
-      drawer: SidebarDrawer(),
+      drawer: SidebarDrawer(widget.teachID),
       body: Padding(
 
         padding: const EdgeInsets.all(16.0),

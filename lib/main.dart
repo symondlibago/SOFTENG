@@ -38,7 +38,7 @@ class MyHomePage extends StatelessWidget {
               onPressed: () {
                 Navigator.push(
                   context,
-                  MaterialPageRoute(builder: (context) => DashboardScreen()),
+                  MaterialPageRoute(builder: (context) => DashboardScreen('1')),
                 );
               },
               child: Text('Student'),
@@ -49,7 +49,7 @@ class MyHomePage extends StatelessWidget {
                 Navigator.push(
                   context,
                   MaterialPageRoute(
-                      builder: (context) => TeachersDashboardScreen()),
+                      builder: (context) => TeachersDashboardScreen('1')),
                 );
               },
               child: Text('Teacher'),

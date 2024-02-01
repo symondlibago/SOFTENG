@@ -2,12 +2,14 @@ import 'package:flutter/material.dart';
 import 'drawer.dart';
 
 class CancelAppointment extends StatelessWidget {
+  final String studID;
   final String avatarText;
   final String name;
   final String availableDate;
   final String time;
 
   CancelAppointment({
+    required this.studID,
     required this.avatarText,
     required this.name,
     required this.availableDate,
@@ -28,7 +30,7 @@ class CancelAppointment extends StatelessWidget {
           ),
         ),
       ),
-      drawer: SidebarDrawer(),
+      drawer: SidebarDrawer(studID),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

@@ -114,7 +114,7 @@ class CancelAppointment extends StatelessWidget {
           ),
         ),
       ),
-      drawer: SidebarDrawer(),
+      drawer: SidebarDrawer(teachID),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

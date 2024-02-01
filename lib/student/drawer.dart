@@ -1,3 +1,4 @@
+import 'package:first_project/Login.dart';
 import 'package:first_project/main.dart';
 import 'package:flutter/material.dart';
 import '../backend.dart';
@@ -9,8 +10,11 @@ import 'cancel_appointment_screen.dart';
 
 class SidebarDrawer extends StatefulWidget {
 
+  final String ID;
 
-  const SidebarDrawer({super.key});
+  const SidebarDrawer(
+      this.ID,
+      {super.key});
 
   @override
   State<SidebarDrawer> createState() => _SidebarDrawerState();
@@ -34,7 +38,7 @@ class _SidebarDrawerState extends State<SidebarDrawer> {
 
 
   getUserData() async {
-    var getUser = await BaseClient().getData("/tempLogin.php");
+    var getUser = await BaseClient().getWithID(widget.ID, "/tempLogin.php");
 
     setState(() {
      studID = getUser["studID"];
@@ -83,7 +87,7 @@ class _SidebarDrawerState extends State<SidebarDrawer> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => DashboardScreen()),
+                        builder: (context) => DashboardScreen(studID)),
                   );
                 }, context),
                 buildDrawerItem('Edit Profile', Icons.person, () {
@@ -111,7 +115,7 @@ class _SidebarDrawerState extends State<SidebarDrawer> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => CancelingAppointment()),
+                        builder: (context) => PendingAppointment(studID)),
                   );
                 }, context),
               ],
@@ -140,7 +144,7 @@ class _SidebarDrawerState extends State<SidebarDrawer> {
             ),
             onTap: () {
               Navigator.pushReplacement(context, MaterialPageRoute(
-                  builder: (context) => MyHomePage())
+                  builder: (context) => LoginPage())
               );
             },
           ),

@@ -1,4 +1,7 @@
+import 'package:first_project/backend.dart';
 import 'package:first_project/main.dart';
+import 'package:first_project/student/dashboard.dart';
+import 'package:first_project/teacher/t_dashboard.dart';
 import 'package:flutter/material.dart';
 import 'signup.dart';
 import 'Welcome.dart';
@@ -25,7 +28,9 @@ class LoginPage extends StatelessWidget {
   final TextEditingController usernameController = TextEditingController();
   final TextEditingController passwordController = TextEditingController();
 
-  void showAlertDialog(BuildContext context, String message, bool success) {
+  LoginPage({super.key});
+
+  void showAlertDialog(BuildContext context, String message, bool success, String ID, String position) {
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -43,7 +48,16 @@ class LoginPage extends StatelessWidget {
           actions: [
             TextButton(
               onPressed: () {
-                Navigator.of(context).pop();
+                print(ID);
+                print(position);
+
+                if(position == "student"){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> DashboardScreen(ID)));
+                }else if(position == "teacher"){
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=> TeachersDashboardScreen(ID)));
+                }else{
+                  Navigator.pop(context);
+                }
                 clearTextFields();
               },
               child: Text("OK"),
@@ -59,16 +73,23 @@ class LoginPage extends StatelessWidget {
     passwordController.clear();
   }
 
-  void handleLogin(BuildContext context) {
+  void handleLogin(BuildContext context) async {
     String username = usernameController.text.trim();
     String password = passwordController.text.trim();
 
+    var loginData = await BaseClient().login('/login.php', username, password);
+
+
+
     if (username.isEmpty || password.isEmpty) {
-      showAlertDialog(context, "Incorrect Username or Password.", false);
+      showAlertDialog(context, "Please Fill Out Username or Password Fields.", false, "0", "");
     } else {
-      showAlertDialog(context, "Login Success.", true);
+      loginData["success"]
+          ? showAlertDialog(context, "Logged In Successfuly", true, loginData["id"], loginData["position"])
+          : showAlertDialog(context, loginData["message"], false, "0", "");
+      }
     }
-  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -94,11 +115,19 @@ class LoginPage extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SizedBox(height: 8),
-                Text(
-                  'Welcome',
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 24,
+                GestureDetector(
+                  onDoubleTap: () {
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(builder: (context) => MyHomePage()),
+                    );
+                  },
+                  child: Text(
+                    'Welcome',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 24,
+                    ),
                   ),
                 ),
                 Text(
@@ -175,8 +204,8 @@ class LoginPage extends StatelessWidget {
                           SizedBox(height: 20),
                           ElevatedButton(
                             onPressed: () {
-                              // handleLogin(context);
-                              Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
+                              handleLogin(context);
+                              // Navigator.push(context, MaterialPageRoute(builder: (context) => MyHomePage()));
                             },
                             style: ElevatedButton.styleFrom(
                               primary: darkBlue,

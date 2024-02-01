@@ -4,6 +4,13 @@ import 'drawer.dart';
 import 'package:table_calendar/table_calendar.dart';
 
 class DashboardScreen extends StatefulWidget {
+
+  final String studID;
+
+  const DashboardScreen(
+      this.studID,
+      {super.key});
+
   @override
   _DashboardScreenState createState() => _DashboardScreenState();
 }
@@ -26,9 +33,9 @@ class _DashboardScreenState extends State<DashboardScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Hi, Trailblazer'),
+        title: Text('ZestCons'),
       ),
-      drawer: SidebarDrawer(),
+      drawer: SidebarDrawer(widget.studID),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

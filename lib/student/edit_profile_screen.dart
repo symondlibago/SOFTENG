@@ -85,7 +85,7 @@ class _EditProfileState extends State<EditProfile> {
         )
 
       ),
-      drawer: SidebarDrawer(),
+      drawer: SidebarDrawer(widget.studID),
       body: SingleChildScrollView(
         child: Padding(
           padding: const EdgeInsets.all(16.0),
@@ -234,7 +234,7 @@ class _EditProfileState extends State<EditProfile> {
 
                       Navigator.push(context,
                         MaterialPageRoute(builder:
-                        (context) => DashboardScreen()
+                        (context) => DashboardScreen(widget.studID)
                         ),
                       );
                     }

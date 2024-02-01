@@ -45,7 +45,7 @@ class _MyScheduleScreenState extends State<MyScheduleScreen> {
           ),
         ),
       ),
-      drawer: SidebarDrawer(),
+      drawer: SidebarDrawer(widget.studID),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(

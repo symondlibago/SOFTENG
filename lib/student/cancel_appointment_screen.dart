@@ -1,15 +1,45 @@
+import 'package:first_project/backend.dart';
 import 'package:flutter/material.dart';
 import 'drawer.dart';
 import 'cancel_appointment.dart';
+class PendingAppointment extends StatefulWidget {
 
-class CancelingAppointment extends StatelessWidget {
+  final String studID;
+
+  const PendingAppointment(
+      this.studID,
+      {super.key});
+
+
+
+  @override
+  State<PendingAppointment> createState() => _PendingAppointmentState();
+}
+
+class _PendingAppointmentState extends State<PendingAppointment> {
+
+  List<dynamic> pendingData = [];
+
+  void initState(){
+    getData();
+    super.initState();
+  }
+
+  getData() async {
+    var data = await BaseClient().getWithID(widget.studID, '/getPendingStudAppointments.php');
+
+    setState(() {
+      pendingData = data;
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         title: Center(
           child: Text(
-            'Canceling Appointment',
+            'Pending Appointments',
             style: TextStyle(
               color: Color(0xFF1f1b4f),
               fontWeight: FontWeight.bold,
@@ -17,58 +47,42 @@ class CancelingAppointment extends StatelessWidget {
           ),
         ),
       ),
-      drawer: SidebarDrawer(),
+      drawer: SidebarDrawer(widget.studID),
       body: Padding(
         padding: const EdgeInsets.all(16.0),
         child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CancelAppointment(
-                      avatarText: 'P',
-                      name: 'Mr. Paul Wesly',
-                      availableDate: 'January 25, 2024',
-                      time: '2:00 PM',
-                    ),
-                  ),
-                );
-              },
-              child: ScheduleDetails(
-                name: 'Mr. Paul Wesly',
-                availableDate: 'January 25, 2024',
-                time: '2:00 PM',
-              ),
-            ),
-            InkWell(
-              onTap: () {
-                Navigator.push(
-                  context,
-                  MaterialPageRoute(
-                    builder: (context) => CancelAppointment(
-                      avatarText: 'N',
-                      name: 'Ms. Nina Dobrev',
-                      availableDate: 'February 20, 2024',
-                      time: '3:30 PM',
-                    ),
-                  ),
-                );
-              },
-              child: ScheduleDetails(
-                name: 'Ms. Nina Dobrev',
-                availableDate: 'February 20, 2024',
-                time: '3:30 PM',
-              ),
-            ),
-          ],
-        ),
-      ),
+            children: [
+              Expanded(child:
+                ListView.builder(
+                    itemCount: pendingData.length,
+                    itemBuilder: (context, index){
+                      return Container(width: double.infinity,
+                          child: ListTile(
+                            title:
+                            ScheduleDetails(
+                                name: '${pendingData[index]["name"]} ${pendingData[index]["last_name"]}',
+                                availableDate: pendingData[index]["date"],
+                                time: pendingData[index]["time"],
+                            ),
+                            trailing: IconButton(
+                              icon: Icon(Icons.close),
+                              onPressed: () async {
+                                await BaseClient().deleteWithID('/deletePending.php', pendingData[index]["pending_id"]);
+
+                                Navigator.push(context, MaterialPageRoute(builder: (context)=> (PendingAppointment(widget.studID))));
+                              },
+                            ),
+                          )
+                      );
+                    })
+              )
+            ],
+    ),
+    )
     );
   }
 }
+
 
 class ScheduleDetails extends StatelessWidget {
   final String name;
@@ -117,7 +131,7 @@ class ScheduleDetails extends StatelessWidget {
               ),
               SizedBox(height: 8),
               Text(
-                'Available on $availableDate',
+                '$availableDate',
                 style: TextStyle(
                   fontSize: 16,
                   color: Color(0xFF1f1b4f),

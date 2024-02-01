@@ -1,5 +1,6 @@
 import 'package:first_project/backend.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'drawer.dart';
 
 class TeacherSchedule extends StatefulWidget {
@@ -43,11 +44,82 @@ class _TeacherScheduleState extends State<TeacherSchedule> {
     });
   }
 
+  void _showAddScheduleDialog(BuildContext context) {
+    // Define variables for date and time
+    DateTime selectedDate = DateTime.now();
+    TimeOfDay selectedTime = TimeOfDay.now();
+
+    showDialog(
+      context: context,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          title: Text('Add Schedule'),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SizedBox(height: 10,),
+              Text('Current Date: ${selectedDate.toString().split(' ')[0]}'),
+              TextButton(
+                onPressed: () async {
+                  final DateTime? pickedDate = await showDatePicker(
+                    context: context,
+                    initialDate: selectedDate,
+                    firstDate: DateTime(2000),
+                    lastDate: DateTime(2101),
+                  );
+                  if (pickedDate != null && pickedDate != selectedDate) {
+                    setState(() {
+                      selectedDate = pickedDate;
+                    });
+                  }
+                },
+                child: Text('Select Date'),
+              ),
+
+              Text('Current Time: ${selectedTime.format(context)}'),
+              SizedBox(height: 10,),
+
+              TextButton(
+                onPressed: () async {
+                  final TimeOfDay? pickedTime = await showTimePicker(
+                    context: context,
+                    initialTime: selectedTime,
+                  );
+                  if (pickedTime != null && pickedTime != selectedTime) {
+                    setState(() {
+                      selectedTime = pickedTime;
+                    });
+                  }
+                },
+                child: Text('Select Time'),
+              ),
+
+              SizedBox(height: 10),
+              ElevatedButton(
+                onPressed: () async {
+                  // Perform action with selected date and time
+
+                  String date = DateFormat('yyyy-MM-dd').format(selectedDate);
+                  String minuteString = selectedTime.minute < 10 ? '0${selectedTime.minute}' : '${selectedTime.minute}';
+                  String time = '${selectedTime.hour}:$minuteString:00';
+                  print('Selected Date: $date');
+                  print('Selected Time: $time');
+                  print(widget.teachID);
+
+                  await BaseClient().insertScheduleTeacher('/insertNewSchedule.php', date, time, widget.teachID);
+                  Navigator.push(context, MaterialPageRoute(builder: (context)=>TeacherSchedule(widget.teachID, widget.fullName))); // Close the dialog
+                },
+                child: Text("Submit"),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-
-
-
     return Scaffold(
       appBar: AppBar(
         title: const Center(
@@ -60,7 +132,7 @@ class _TeacherScheduleState extends State<TeacherSchedule> {
           ),
         ),
       ),
-      drawer: SidebarDrawer(),
+      drawer: SidebarDrawer(widget.teachID),
       body:
 
 
@@ -153,7 +225,7 @@ class _TeacherScheduleState extends State<TeacherSchedule> {
 
       floatingActionButton: FloatingActionButton(
         onPressed: () {
-
+          _showAddScheduleDialog(context);
         },
         child: Icon(Icons.add,
           color: Colors.amber,
@@ -221,70 +293,3 @@ class ScheduleDetails extends StatelessWidget {
 }
 
 
-//
-// void showCommentDialog(BuildContext context) {
-//
-// // FLOATING BUTTON ACTION WHERE I ADD A DATE AND TIME FAK THIS
-//
-//   showDialog(
-//     context: context,
-//     builder: (BuildContext context) {
-//       return AlertDialog(
-//         title: Text('Add Schedule'),
-//         content: Column(
-//           mainAxisSize: MainAxisSize.min,
-//           children: [
-//             accept
-//                 ? Text('Details for Meetup')
-//                 : Text('Reason for Rejection')
-//             ,
-//             TextField(
-//               controller: commentController,
-//               maxLines: 3,
-//               decoration: InputDecoration(
-//                 hintText: 'Enter your comment here...',
-//                 border: OutlineInputBorder(),
-//               ),
-//             ),
-//             SizedBox(height: 10),
-//             TextField(
-//               controller: commentController,
-//               maxLines: 3,
-//               decoration: InputDecoration(
-//                 hintText: 'Enter your comment here...',
-//                 border: OutlineInputBorder(),
-//               ),
-//             ),
-//             SizedBox(height: 10),
-//             Column(
-//                 children:[ ElevatedButton(
-//                   onPressed: () async {
-//
-//                     String comment = commentController.text;
-//
-//
-//                     await BaseClient().acceptAppointment('/acceptAppointment.php', pendingID, comment)
-//
-//
-//                     Navigator.push(context, MaterialPageRoute(builder: (context)=> ));
-//                   },
-//                   style: ElevatedButton.styleFrom(
-//                     primary: Color(0xFF1f1b4f),
-//                     shape: RoundedRectangleBorder(
-//                       borderRadius: BorderRadius.circular(20.0),
-//                     ),
-//                   ),
-//                   child: const Text("Submit",
-//                     style: TextStyle(
-//                       color: Color.fromRGBO(250, 180, 23, 1),
-//                     ),
-//                   ),
-//                 ),
-//                 ]
-//             )
-//           ],
-//         ),
-//       );
-//     },
-//   );
-// }

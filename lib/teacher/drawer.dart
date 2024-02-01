@@ -1,3 +1,4 @@
+import 'package:first_project/Login.dart';
 import 'package:first_project/main.dart';
 import 'package:flutter/material.dart';
 import '../backend.dart';
@@ -10,8 +11,12 @@ import 't_pending.dart';
 
 class SidebarDrawer extends StatefulWidget {
 
+  final String ID;
 
-  const SidebarDrawer({super.key});
+
+  const SidebarDrawer(
+      this.ID,
+      {super.key});
 
   @override
   State<SidebarDrawer> createState() => _SidebarDrawerState();
@@ -35,7 +40,7 @@ class _SidebarDrawerState extends State<SidebarDrawer> {
 
 
   getUserData() async {
-    var getUser = await BaseClient().getData("/tempLoginTeacher.php");
+    var getUser = await BaseClient().getWithID(widget.ID, "/tempLoginTeacher.php");
 
     setState(() {
       teachID = getUser["tID"];
@@ -82,14 +87,14 @@ class _SidebarDrawerState extends State<SidebarDrawer> {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => TeachersDashboardScreen()),
+                        builder: (context) => TeachersDashboardScreen(teachID)),
                   );
                 }, context),
                 buildDrawerItem('Edit Profile', Icons.person, () {
                   Navigator.push(
                     context,
                     MaterialPageRoute(
-                        builder: (context) => EditProfileScreen()),
+                        builder: (context) => TeachEditProfile(teachID)),
                   );
                 }, context),
                 buildDrawerItem('My Appointment', Icons.schedule, () {
@@ -139,7 +144,7 @@ class _SidebarDrawerState extends State<SidebarDrawer> {
             ),
             onTap: () {
               Navigator.pushReplacement(context, MaterialPageRoute(
-                  builder: (context) => MyHomePage())
+                  builder: (context) => LoginPage())
               );
             },
           ),
